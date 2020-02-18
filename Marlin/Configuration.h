@@ -735,7 +735,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 93 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 97.72 }
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -952,10 +952,11 @@
  * Specify a Probe position as { X, Y, Z }
  */
 //#define NOZZLE_TO_PROBE_OFFSET { 10, 10, 0 }
-#define CR_20_PRO_0x3333_X_EXTENT       12  // O quanto o carro em X pode passar do final da mesa.
+#define CR_20_PRO_0x3333_X_EXTENT        12 // O quanto o carro em X pode passar do final da mesa.
+#define CR_20_PRO_0x3333_Y_OFFSET         8 // O quanto o carro em Y deve passar do início do endstop.
 #define CR_20_PRO_0x3333_X_PROBE_OFFSET -42 // X offset: -left  +right  [of the nozzle]
 #define CR_20_PRO_0x3333_Y_PROBE_OFFSET -4  // Y offset: -front +behind [the nozzle]
-#define CR_20_PRO_0x3333_Z_PROBE_OFFSET -3  // Z offset: -below +above  [the nozzle]
+#define CR_20_PRO_0x3333_Z_PROBE_OFFSET -5  // Z offset: -below +above  [the nozzle]
 
 #define NOZZLE_TO_PROBE_OFFSET { CR_20_PRO_0x3333_X_PROBE_OFFSET, \
                                   CR_20_PRO_0x3333_Y_PROBE_OFFSET, \
@@ -1000,8 +1001,8 @@
  * Example: `M851 Z-5` with a CLEARANCE of 4  =>  9mm from bed to nozzle.
  *     But: `M851 Z+1` with a CLEARANCE of 2  =>  2mm from bed to nozzle.
  */
-#define Z_CLEARANCE_DEPLOY_PROBE   10 // Z Clearance for Deploy/Stow
-#define Z_CLEARANCE_BETWEEN_PROBES  5 // Z Clearance between probe points
+#define Z_CLEARANCE_DEPLOY_PROBE    5 // Z Clearance for Deploy/Stow
+#define Z_CLEARANCE_BETWEEN_PROBES  3 // Z Clearance between probe points
 #define Z_CLEARANCE_MULTI_PROBE     3 // Z Clearance between multiple probes
 //#define Z_AFTER_PROBING           5 // Z position after probing is done
 
@@ -1066,7 +1067,7 @@
 // @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
-#define INVERT_E0_DIR false
+#define INVERT_E0_DIR true
 #define INVERT_E1_DIR false
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
@@ -1081,7 +1082,7 @@
 
 //#define UNKNOWN_Z_NO_RAISE      // Don't raise Z (lower the bed) if Z is "unknown." For beds that fall when Z is powered off.
 
-#define Z_HOMING_HEIGHT  4      // (mm) Minimal Z height before homing (G28) for Z clearance above the bed, clamps, ...
+#define Z_HOMING_HEIGHT  10     // (mm) Minimal Z height before homing (G28) for Z clearance above the bed, clamps, ...
                                 // Be sure to have this much clearance over your Z_MAX_POS to prevent grinding.
 
 //#define Z_AFTER_HOMING  10      // (mm) Height to move to after homing Z
@@ -1100,10 +1101,10 @@
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
-#define Y_MIN_POS 0
+#define Y_MIN_POS CR_20_PRO_0x3333_Y_OFFSET
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE + CR_20_PRO_0x3333_X_EXTENT
-#define Y_MAX_POS Y_BED_SIZE
+#define Y_MAX_POS Y_BED_SIZE + CR_20_PRO_0x3333_Y_OFFSET
 #define Z_MAX_POS 230
 
 /**
@@ -1326,7 +1327,7 @@
 //#define LEVEL_BED_CORNERS
 
 #if ENABLED(LEVEL_BED_CORNERS)
-  #define LEVEL_CORNERS_INSET_LFRB { 30, 30, 30, 30 } // (mm) Left, Front, Right, Back insets
+  #define LEVEL_CORNERS_INSET_LFRB { 30, 35, 30, 35 } // (mm) Left, Front, Right, Back insets
   #define LEVEL_CORNERS_HEIGHT      0.0   // (mm) Z height of nozzle at leveling points
   #define LEVEL_CORNERS_Z_HOP       4.0   // (mm) Z height of nozzle between leveling points
   //#define LEVEL_CENTER_TOO              // Move to the center after the last corner
