@@ -21,6 +21,31 @@
  */
 #pragma once
 
+//===========================================================================
+//========================== CR20-PRO Custom Specs ==========================
+//===========================================================================
+
+// The real size of the print bed
+#define _X_REAL_BED_SIZE         235
+#define _Y_REAL_BED_SIZE         235
+
+// The margins to remove from the real size of the print bed
+#define _X_BED_MARGIN_LEFT         5
+#define _X_BED_MARGIN_RIGHT        5
+#define _Y_BED_MARGIN_FRONT       15
+#define _Y_BED_MARGIN_BACK        15
+
+// The offset from the endstops
+#define _X_MIN_ENDSTOP_OFFSET      0
+#define _X_MAX_ENDSTOP_OFFSET     10
+#define _Y_MIN_ENDSTOP_OFFSET     -4
+#define _Y_MAX_ENDSTOP_OFFSET     (- (_Y_BED_MARGIN_FRONT + _Y_BED_MARGIN_BACK))
+
+// The probe offset regarding the nozzle
+#define _X_PROBE_OFFSET          -42 // -left  +right
+#define _Y_PROBE_OFFSET           -4 // -front +behind
+#define _Z_PROBE_OFFSET           -3 // -below +above
+
 /**
  * Configuration.h
  *
@@ -951,21 +976,12 @@
  *
  * Specify a Probe position as { X, Y, Z }
  */
-#define CR_20_PRO_0x3333_X_EXTENT        12 // O quanto o carro em X pode passar do final da mesa.
-#define CR_20_PRO_0x3333_Y_EXTENT        -5 // O quanto o carro em Y pode passar do final da mesa.
 
-#define CR_20_PRO_0x3333_X_PROBE_OFFSET -42 // X offset: -left  +right  [of the nozzle]
-#define CR_20_PRO_0x3333_Y_PROBE_OFFSET  -4 // Y offset: -front +behind [the nozzle]
-#define CR_20_PRO_0x3333_Z_PROBE_OFFSET  -3 // Z offset: -below +above  [the nozzle]
-
-//#define NOZZLE_TO_PROBE_OFFSET { 10, 10, 0 }
-#define NOZZLE_TO_PROBE_OFFSET { CR_20_PRO_0x3333_X_PROBE_OFFSET, \
-                                  CR_20_PRO_0x3333_Y_PROBE_OFFSET, \
-                                  CR_20_PRO_0x3333_Z_PROBE_OFFSET }
+#define NOZZLE_TO_PROBE_OFFSET { _X_PROBE_OFFSET, _Y_PROBE_OFFSET, _Z_PROBE_OFFSET }
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
-#define MIN_PROBE_EDGE 15
+#define MIN_PROBE_EDGE 0
 
 // X and Y axis travel speed (mm/m) between probes
 #define XY_PROBE_SPEED 2000
@@ -1097,15 +1113,15 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 235
-#define Y_BED_SIZE 235
+#define X_BED_SIZE (_X_REAL_BED_SIZE - _X_BED_MARGIN_LEFT  - _X_BED_MARGIN_RIGHT)
+#define Y_BED_SIZE (_Y_REAL_BED_SIZE - _Y_BED_MARGIN_FRONT - _Y_BED_MARGIN_BACK)
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
-#define X_MIN_POS 0
-#define Y_MIN_POS CR_20_PRO_0x3333_Y_EXTENT
+#define X_MIN_POS (_X_MIN_ENDSTOP_OFFSET - _X_BED_MARGIN_LEFT)
+#define Y_MIN_POS (_Y_MIN_ENDSTOP_OFFSET - _Y_BED_MARGIN_BACK)
 #define Z_MIN_POS 0
-#define X_MAX_POS X_BED_SIZE + CR_20_PRO_0x3333_X_EXTENT
-#define Y_MAX_POS Y_BED_SIZE //+ CR_20_PRO_0x3333_Y_EXTENT
+#define X_MAX_POS (_X_REAL_BED_SIZE + _X_MAX_ENDSTOP_OFFSET)
+#define Y_MAX_POS (_Y_REAL_BED_SIZE + _Y_MAX_ENDSTOP_OFFSET)
 #define Z_MAX_POS 230
 
 /**
@@ -1288,7 +1304,7 @@
 
   #define MESH_EDIT_GFX_OVERLAY     // Display a graphics overlay while editing the mesh
 
-  #define MESH_INSET 15             // Set Mesh bounds as an inset region of the bed
+  #define MESH_INSET 0              // Set Mesh bounds as an inset region of the bed
   #define GRID_MAX_POINTS_X 7       // Don't use more than 15 points per axis, implementation limited.
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
