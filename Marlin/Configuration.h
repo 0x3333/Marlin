@@ -33,8 +33,8 @@
 // The margins to remove from the real size of the print bed
 #define _X_BED_MARGIN_LEFT         5
 #define _X_BED_MARGIN_RIGHT        5
-#define _Y_BED_MARGIN_FRONT       15
-#define _Y_BED_MARGIN_BACK        15
+#define _Y_BED_MARGIN_FRONT        5
+#define _Y_BED_MARGIN_BACK        52
 
 // The offset from the endstops
 #define _X_MIN_ENDSTOP_OFFSET      0
@@ -526,9 +526,9 @@
   //#define DEFAULT_Kd 440
 
   // CR20-Pro
-  #define DEFAULT_Kp 20.84
-  #define DEFAULT_Ki 1.96
-  #define DEFAULT_Kd 55.47
+ #define DEFAULT_Kp 23.55
+ #define DEFAULT_Ki 1.91
+ #define DEFAULT_Kd 72.69
 #endif // PIDTEMP
 
 //===========================================================================
@@ -548,7 +548,7 @@
  * heater. If your configuration is significantly different than this and you don't understand
  * the issues involved, don't use bed PID until someone else verifies that your hardware works.
  */
-//#define PIDTEMPBED
+#define PIDTEMPBED
 
 //#define BED_LIMIT_SWITCHING
 
@@ -589,7 +589,7 @@
  * *** IT IS HIGHLY RECOMMENDED TO LEAVE THIS OPTION ENABLED! ***
  */
 #define PREVENT_COLD_EXTRUSION
-#define EXTRUDE_MINTEMP 170
+#define EXTRUDE_MINTEMP 180
 
 /**
  * Prevent a single extrusion longer than EXTRUDE_MAXLENGTH.
@@ -768,7 +768,7 @@
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 500, 500, 10, 25 }
+#define DEFAULT_MAX_FEEDRATE          { 150, 150, 12, 20 }
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -781,7 +781,7 @@
  * Override with M201
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 500, 500, 100, 5000 }
+#define DEFAULT_MAX_ACCELERATION      { 500, 500, 100, 1000 }
 
 //#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
@@ -797,8 +797,8 @@
  *   M204 T    Travel Acceleration
  */
 #define DEFAULT_ACCELERATION          500    // X, Y, Z and E acceleration for printing moves
-#define DEFAULT_RETRACT_ACCELERATION  500    // E acceleration for retracts
-#define DEFAULT_TRAVEL_ACCELERATION   1000    // X, Y, Z acceleration for travel (non printing) moves
+#define DEFAULT_RETRACT_ACCELERATION  500   // E acceleration for retracts
+#define DEFAULT_TRAVEL_ACCELERATION   500   // X, Y, Z acceleration for travel (non printing) moves
 
 /**
  * Default Jerk limits (mm/s)
@@ -808,11 +808,11 @@
  * When changing speed and direction, if the difference is less than the
  * value set here, it may happen instantaneously.
  */
-//#define CLASSIC_JERK
+#define CLASSIC_JERK
 #if ENABLED(CLASSIC_JERK)
-  #define DEFAULT_XJERK 10.0
-  #define DEFAULT_YJERK 10.0
-  #define DEFAULT_ZJERK  0.3
+  #define DEFAULT_XJERK 8.0
+  #define DEFAULT_YJERK 8.0
+  #define DEFAULT_ZJERK 2.0
 
   //#define LIMITED_JERK_EDITING        // Limit edit via M205 or LCD to DEFAULT_aJERK * 2
   #if ENABLED(LIMITED_JERK_EDITING)
@@ -820,7 +820,7 @@
   #endif
 #endif
 
-#define DEFAULT_EJERK    5.0  // May be used by Linear Advance
+#define DEFAULT_EJERK   10.0  // May be used by Linear Advance
 
 /**
  * Junction Deviation Factor
@@ -830,7 +830,7 @@
  *   http://blog.kyneticcnc.com/2018/10/computing-junction-deviation-for-marlin.html
  */
 #if DISABLED(CLASSIC_JERK)
-  #define JUNCTION_DEVIATION_MM 0.06 // (mm) Distance from real junction edge
+  #define JUNCTION_DEVIATION_MM 0.022 // (mm) Distance from real junction edge
 #endif
 
 /**
