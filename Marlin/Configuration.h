@@ -21,32 +21,6 @@
  */
 #pragma once
 
-//===========================================================================
-//========================== CR20-PRO Custom Specs ==========================
-//===========================================================================
-
-// The real size of the print bed
-#define _X_REAL_BED_SIZE         235
-#define _Y_REAL_BED_SIZE         235
-#define _Z_REAL_BED_SIZE         230
-
-// The margins to remove from the real size of the print bed
-#define _X_BED_MARGIN_LEFT         5
-#define _X_BED_MARGIN_RIGHT        5
-#define _Y_BED_MARGIN_FRONT        5
-#define _Y_BED_MARGIN_BACK        52
-
-// The offset from the endstops
-#define _X_MIN_ENDSTOP_OFFSET      0
-#define _X_MAX_ENDSTOP_OFFSET     10
-#define _Y_MIN_ENDSTOP_OFFSET     -4
-#define _Y_MAX_ENDSTOP_OFFSET     (- (_Y_BED_MARGIN_FRONT + _Y_BED_MARGIN_BACK))
-
-// The probe offset regarding the nozzle
-#define _X_PROBE_OFFSET          -42 // -left  +right
-#define _Y_PROBE_OFFSET           -4 // -front +behind
-#define _Z_PROBE_OFFSET           -3 // -below +above
-
 /**
  * Configuration.h
  *
@@ -110,7 +84,7 @@
  */
 
 // Show the Marlin bootscreen on startup. ** ENABLE FOR PRODUCTION **
-#define SHOW_BOOTSCREEN
+// #define SHOW_BOOTSCREEN
 
 // Show the bitmap in Marlin/_Bootscreen.h on startup.
 //#define SHOW_CUSTOM_BOOTSCREEN
@@ -128,7 +102,7 @@
  *
  * :[-1, 0, 1, 2, 3, 4, 5, 6, 7]
  */
-#define SERIAL_PORT 0
+#define SERIAL_PORT -1
 
 /**
  * Serial Port Baud Rate
@@ -149,7 +123,7 @@
  * Currently Ethernet (-2) is only supported on Teensy 4.1 boards.
  * :[-2, -1, 0, 1, 2, 3, 4, 5, 6, 7]
  */
-//#define SERIAL_PORT_2 -1
+#define SERIAL_PORT_2 0
 //#define BAUDRATE_2 250000   // Enable to override BAUDRATE
 
 /**
@@ -589,7 +563,7 @@
 #define HEATER_5_MAXTEMP 275
 #define HEATER_6_MAXTEMP 275
 #define HEATER_7_MAXTEMP 275
-#define BED_MAXTEMP      125
+#define BED_MAXTEMP      115
 #define CHAMBER_MAXTEMP  60
 
 /**
@@ -598,8 +572,8 @@
  * (especially before PID tuning). Setting the target temperature too close to MAXTEMP guarantees
  * a MAXTEMP shutdown! Use these values to forbid temperatures being set too close to MAXTEMP.
  */
-#define HOTEND_OVERSHOOT 15   // (°C) Forbid temperatures over MAXTEMP - OVERSHOOT
-#define BED_OVERSHOOT    10   // (°C) Forbid temperatures over MAXTEMP - OVERSHOOT
+#define HOTEND_OVERSHOOT 10   // (°C) Forbid temperatures over MAXTEMP - OVERSHOOT
+#define BED_OVERSHOOT     5   // (°C) Forbid temperatures over MAXTEMP - OVERSHOOT
 #define COOLER_OVERSHOOT  2   // (°C) Forbid temperatures closer than OVERSHOOT
 
 //===========================================================================
@@ -614,8 +588,8 @@
 #define PID_K1 0.95      // Smoothing factor within any PID loop
 
 #if ENABLED(PIDTEMP)
-  //#define PID_EDIT_MENU         // Add PID editing to the "Advanced Settings" menu. (~700 bytes of PROGMEM)
-  //#define PID_AUTOTUNE_MENU     // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of PROGMEM)
+  #define PID_EDIT_MENU         // Add PID editing to the "Advanced Settings" menu. (~700 bytes of PROGMEM)
+  #define PID_AUTOTUNE_MENU     // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of PROGMEM)
   //#define PID_PARAMS_PER_HOTEND // Uses separate PID parameters for each extruder (useful for mismatched extruders)
                                   // Set/get with gcode: M301 E[extruder number, 0-2]
 
@@ -667,10 +641,9 @@
 
   // 120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   // from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
-  #define DEFAULT_bedKp 10.00
-  #define DEFAULT_bedKi .023
-  #define DEFAULT_bedKd 305.4
-
+  #define DEFAULT_bedKp 173.0
+  #define DEFAULT_bedKi 35.0
+  #define DEFAULT_bedKd 580.0
   // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
 #endif // PIDTEMPBED
 
@@ -957,7 +930,7 @@
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 150, 150, 12, 20 }
+#define DEFAULT_MAX_FEEDRATE          { 150, 150, 12, 80 }
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -1032,7 +1005,7 @@
  *
  * See https://github.com/synthetos/TinyG/wiki/Jerk-Controlled-Motion-Explained
  */
-#define S_CURVE_ACCELERATION
+// #define S_CURVE_ACCELERATION
 
 //===========================================================================
 //============================= Z Probe Options =============================
@@ -1205,7 +1178,7 @@
 #define PROBING_MARGIN 10
 
 // X and Y axis travel speed (mm/min) between probes
-#define XY_PROBE_FEEDRATE (133*60)
+#define XY_PROBE_FEEDRATE (120*60)
 
 // Feedrate (mm/min) for the first approach when double-probing (MULTIPLE_PROBING == 2)
 #define Z_PROBE_FEEDRATE_FAST (4*60)
@@ -1275,12 +1248,12 @@
  * Example: `M851 Z-5` with a CLEARANCE of 4  =>  9mm from bed to nozzle.
  *     But: `M851 Z+1` with a CLEARANCE of 2  =>  2mm from bed to nozzle.
  */
-#define Z_CLEARANCE_DEPLOY_PROBE    5 // Z Clearance for Deploy/Stow
-#define Z_CLEARANCE_BETWEEN_PROBES  3 // Z Clearance between probe points
-#define Z_CLEARANCE_MULTI_PROBE     3 // Z Clearance between multiple probes
+#define Z_CLEARANCE_DEPLOY_PROBE    4 // Z Clearance for Deploy/Stow
+#define Z_CLEARANCE_BETWEEN_PROBES  2 // Z Clearance between probe points
+#define Z_CLEARANCE_MULTI_PROBE     2 // Z Clearance between multiple probes
 //#define Z_AFTER_PROBING           5 // Z position after probing is done
 
-#define Z_PROBE_LOW_POINT          -2 // Farthest distance below the trigger-point to go before stopping
+#define Z_PROBE_LOW_POINT          -1 // Farthest distance below the trigger-point to go before stopping
 
 // For M851 give a range for adjusting the Z probe offset
 #define Z_PROBE_OFFSET_RANGE_MIN -20
@@ -1313,10 +1286,10 @@
 //#define DELAY_BEFORE_PROBING 200  // (ms) To prevent vibrations from triggering piezo sensors
 
 // Require minimum nozzle and/or bed temperature for probing
-//#define PREHEAT_BEFORE_PROBING
+// #define PREHEAT_BEFORE_PROBING
 #if ENABLED(PREHEAT_BEFORE_PROBING)
-  #define PROBING_NOZZLE_TEMP 120   // (°C) Only applies to E0 at this time
-  #define PROBING_BED_TEMP     50
+  // #define PROBING_NOZZLE_TEMP 120   // (°C) Only applies to E0 at this time
+  // #define PROBING_BED_TEMP     60
 #endif
 
 // For Inverting Stepper Enable Pins (Active Low) use 0, Non Inverting (Active High) use 1
@@ -1396,16 +1369,42 @@
 
 // @section machine
 
+//===========================================================================
+//========================== CR20-PRO Custom Specs ==========================
+//===========================================================================
+
+// The real size of the print bed
+#define _X_REAL_BED_SIZE         231
+#define _Y_REAL_BED_SIZE         235
+#define _Z_REAL_BED_SIZE         230
+
+// The margins to remove from the real size of the print bed
+#define _X_BED_MARGIN_LEFT         0
+#define _X_BED_MARGIN_RIGHT        0
+#define _Y_BED_MARGIN_FRONT       18
+#define _Y_BED_MARGIN_BACK        18
+
+// The offset from the endstops
+#define _X_MIN_ENDSTOP_OFFSET      0 //  2 mm inside  the bed , used 0 to avoid nom reachable area
+#define _X_MAX_ENDSTOP_OFFSET     13 // 13 mm outside the bed
+#define _Y_MIN_ENDSTOP_OFFSET      5 //  5 mm outside  the bed
+#define _Y_MAX_ENDSTOP_OFFSET      0
+
+// The probe offset regarding the nozzle
+#define _X_PROBE_OFFSET          -42 // -left  +right
+#define _Y_PROBE_OFFSET           -4 // -front +behind
+#define _Z_PROBE_OFFSET           -3 // -below +above
+
 // The size of the printable area
-#define X_BED_SIZE (_X_REAL_BED_SIZE - _X_BED_MARGIN_LEFT  - _X_BED_MARGIN_RIGHT)
-#define Y_BED_SIZE (_Y_REAL_BED_SIZE - _Y_BED_MARGIN_FRONT - _Y_BED_MARGIN_BACK)
+#define X_BED_SIZE (_X_REAL_BED_SIZE - _X_BED_MARGIN_LEFT  - _X_BED_MARGIN_RIGHT) // 233
+#define Y_BED_SIZE (_Y_REAL_BED_SIZE - _Y_BED_MARGIN_FRONT - _Y_BED_MARGIN_BACK)  // 
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
-#define X_MIN_POS (_X_MIN_ENDSTOP_OFFSET - _X_BED_MARGIN_LEFT)
-#define Y_MIN_POS (_Y_MIN_ENDSTOP_OFFSET - _Y_BED_MARGIN_BACK)
+#define X_MIN_POS (_X_MIN_ENDSTOP_OFFSET + _X_BED_MARGIN_LEFT)    // 0
+#define X_MAX_POS (_X_REAL_BED_SIZE + _X_MAX_ENDSTOP_OFFSET)      // 244
+#define Y_MIN_POS (- _Y_MIN_ENDSTOP_OFFSET - _Y_BED_MARGIN_FRONT) // -23
+#define Y_MAX_POS (_Y_REAL_BED_SIZE - _Y_BED_MARGIN_FRONT - _Y_BED_MARGIN_BACK + _Y_MAX_ENDSTOP_OFFSET)  // 199
 #define Z_MIN_POS 0
-#define X_MAX_POS (_X_REAL_BED_SIZE + _X_MAX_ENDSTOP_OFFSET)
-#define Y_MAX_POS (_Y_REAL_BED_SIZE + _Y_MAX_ENDSTOP_OFFSET)
 #define Z_MAX_POS _Z_REAL_BED_SIZE
 //#define I_MIN_POS 0
 //#define I_MAX_POS 50
@@ -1603,7 +1602,7 @@
   // The height can be set with M420 Z<height>
   #define ENABLE_LEVELING_FADE_HEIGHT
   #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
-    #define DEFAULT_LEVELING_FADE_HEIGHT 10.0 // (mm) Default fade height.
+    #define DEFAULT_LEVELING_FADE_HEIGHT 1.0 // (mm) Default fade height.
   #endif
 
   // For Cartesian machines, instead of dividing moves on mesh boundaries,
@@ -1663,11 +1662,11 @@
 
   #define MESH_EDIT_GFX_OVERLAY     // Display a graphics overlay while editing the mesh
 
-  #define MESH_INSET 0              // Set Mesh bounds as an inset region of the bed
-  #define GRID_MAX_POINTS_X 7       // Don't use more than 15 points per axis, implementation limited.
-  #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
+  #define MESH_INSET 1              // Set Mesh bounds as an inset region of the bed
+  #define GRID_MAX_POINTS_X 5       // Don't use more than 15 points per axis, implementation limited.
+  #define GRID_MAX_POINTS_Y 5
 
-  //#define UBL_HILBERT_CURVE       // Use Hilbert distribution for less travel when probing multiple points
+  #define UBL_HILBERT_CURVE       // Use Hilbert distribution for less travel when probing multiple points
 
   #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
   #define UBL_SAVE_ACTIVE_ON_M500   // Save the currently active mesh in the current slot on M500
@@ -1890,8 +1889,8 @@
 #define PREHEAT_1_FAN_SPEED     0 // Value from 0 to 255
 
 #define PREHEAT_2_LABEL       "ABS"
-#define PREHEAT_2_TEMP_HOTEND 240
-#define PREHEAT_2_TEMP_BED    70
+#define PREHEAT_2_TEMP_HOTEND 230
+#define PREHEAT_2_TEMP_BED    100
 #define PREHEAT_2_TEMP_CHAMBER 35
 #define PREHEAT_2_FAN_SPEED     0 // Value from 0 to 255
 
